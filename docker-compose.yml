@@ -1,0 +1,32 @@
+version: "3.7"
+
+services:
+  app:
+    build:
+      args:
+        user: jdih
+        uid: 1000
+      context: ./
+      dockerfile: Dockerfile
+    image: jdih
+    container_name: jdih-app
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ./:/var/www
+    networks:
+      - jdih-network
+  nginx:
+    image: nginx:1.17-alpine
+    container_name: jdih-nginx
+    restart: unless-stopped
+    ports:
+      - 8080:80
+    volumes:
+      - ./:/var/www
+      - ./nginx:/etc/nginx/conf.d
+    networks:
+      - jdih-network
+networks:
+  jdih-network:
+    driver: bridge
