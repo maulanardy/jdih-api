@@ -11,7 +11,9 @@ class ProdukHukumController extends Controller
         $limit = $request->has('limit') ? $request->limit : 10;
         $kategoriIds = Kategori::where('KATEGORI_TYPE', 'Produk Hukum')->where('KATEGORI_ISAKTIF', 1)->pluck("KATEGORI_ID");
 
-        return ProdukHukum::whereIn('PRODUK_KATEGORI_ID', $kategoriIds)->where('PRODUK_STATUS', '!=', 99)->where('PRODUK_STATUS_ACTIVE', 1)->with('file')->orderBy('PRODUK_TAHUN', 'DESC')->orderBy('PRODUK_TIMESTAMP', 'DESC')->paginate($limit);
+        $produk = ProdukHukum::whereIn('PRODUK_KATEGORI_ID', $kategoriIds)->where('PRODUK_STATUS', '!=', 99)->where('PRODUK_STATUS_ACTIVE', 1)->with('file')->orderBy('PRODUK_TAHUN', 'DESC')->orderBy('PRODUK_TIMESTAMP', 'DESC');
+        
+        return $produk->paginate($limit);
     }
 
     public function informasi(Request $request){
@@ -25,8 +27,24 @@ class ProdukHukumController extends Controller
         if($request->has('categories')){
             $limit = $request->has('limit') ? $request->limit : 10;
             $kategoriIds = explode(",", $request->categories);
-    
-            return ProdukHukum::whereIn('PRODUK_KATEGORI_ID', $kategoriIds)->where('PRODUK_STATUS', '!=', 99)->where('PRODUK_STATUS_ACTIVE', 1)->with('file')->orderBy('PRODUK_TAHUN', 'DESC')->orderBy('PRODUK_TIMESTAMP', 'DESC')->paginate($limit);
+
+            $produk = ProdukHukum::whereIn('PRODUK_KATEGORI_ID', $kategoriIds)->where('PRODUK_STATUS', '!=', 99)->where('PRODUK_STATUS_ACTIVE', 1)->with('file')->orderBy('PRODUK_TAHUN', 'DESC')->orderBy('PRODUK_TIMESTAMP', 'DESC');
+            
+            if($request->has('judul_not')){
+                $produk = $produk->where('PRODUK_JUDUL', 'NOT LIKE', '%'.$request->judul_not.'%');
+            }
+
+            if($request->has('judul')){
+                $produk = $produk->where('PRODUK_JUDUL', 'LIKE', '%'.$request->judul.'%');
+            }
+
+            if($request->has('bahasa')){
+                $produk = $produk->where('PRODUK_BAHASA', $request->bahasa);
+            }
+
+            $paginated = $produk->paginate($limit);
+            
+            return $paginated->appends($request->input());
         } else {
             return response()->json(['message' => 'categories required'], 400);
         }
@@ -38,5 +56,39 @@ class ProdukHukumController extends Controller
         } else {
             return response()->json(['message' => 'id required'], 400);
         }
+    }
+
+    public function countPermenaker(Request $request){
+        return ProdukHukum::select(ProdukHukum::raw('PRODUK_STATUS, COUNT(PRODUK_ID) as JUMLAH'))
+        ->whereIn('PRODUK_KATEGORI_ID', [16])
+        ->where('PRODUK_STATUS', '<>', 99)
+        ->where('PRODUK_JUDUL', 'LIKE', '%MENAKER%')
+        ->groupBy('PRODUK_STATUS')
+        ->get();
+    }
+
+    public function countPerBp2mi(Request $request){
+        return ProdukHukum::select(ProdukHukum::raw('PRODUK_STATUS, COUNT(PRODUK_ID) as JUMLAH'))
+        ->whereIn('PRODUK_KATEGORI_ID', [17])
+        ->where('PRODUK_STATUS', '<>', 99)
+        ->groupBy('PRODUK_STATUS')
+        ->get();
+    }
+
+    public function countKepka(Request $request){
+        return ProdukHukum::select(ProdukHukum::raw('PRODUK_STATUS, COUNT(PRODUK_ID) as JUMLAH'))
+        ->whereIn('PRODUK_KATEGORI_ID', [7])
+        ->where('PRODUK_STATUS', '<>', 99)
+        ->where('PRODUK_JUDUL', 'LIKE', '%KEPKA%')
+        ->groupBy('PRODUK_STATUS')
+        ->get();
+    }
+
+    public function countSEKepala(Request $request){
+        return ProdukHukum::select(ProdukHukum::raw('PRODUK_STATUS, COUNT(PRODUK_ID) as JUMLAH'))
+        ->whereIn('PRODUK_KATEGORI_ID', [8])
+        ->where('PRODUK_STATUS', '<>', 99)
+        ->groupBy('PRODUK_STATUS')
+        ->get();
     }
 }

@@ -18,17 +18,23 @@ $router->get('/', function () use ($router) {
 });
 
 $router->group(['prefix' => '/api/v1/'], function () use ($router) {
-    $router->get('news', ['as' => 'news', 'uses' => 'NewsController@get']);
-    $router->get('news/{id}', ['as' => 'newsDetail', 'uses' => 'NewsController@detail']);
-    $router->get('produk-hukum', ['as' => 'produkHukum', 'uses' => 'ProdukHukumController@produk']);
-    $router->get('produk-hukum/category', ['as' => 'produkHukumCategory', 'uses' => 'ProdukHukumController@produkByCategory']);
-    $router->get('produk-hukum/{id}', ['as' => 'produkHukumCategoryById', 'uses' => 'ProdukHukumController@produkById']);
-    $router->get('informasi-hukum', ['as' => 'infoHukum', 'uses' => 'ProdukHukumController@informasi']);
-    $router->get('informasi-hukum/category', ['as' => 'infoHukumCategory', 'uses' => 'ProdukHukumController@produkByCategory']);
-    $router->get('informasi-hukum/{id}', ['as' => 'informasiHukumCategoryById', 'uses' => 'ProdukHukumController@produkById']);
-    $router->get('category', ['as' => 'category', 'uses' => 'KategoriController@get']);
-    $router->get('category/produk-hukum', ['as' => 'categoryProduk', 'uses' => 'KategoriController@getProdukHukum']);
-    $router->get('category/informasi-hukum', ['as' => 'categoryInformasi', 'uses' => 'KategoriController@getInformasiHukum']);
-    $router->get('category/{id}', ['as' => 'categoryById', 'uses' => 'KategoriController@getById']);
+    $router->get('news', ['uses' => 'NewsController@get']);
+    $router->get('news/{id}', ['uses' => 'NewsController@detail']);
+    $router->get('produk-hukum', ['uses' => 'ProdukHukumController@produk']);
+    $router->get('produk-hukum/category', ['uses' => 'ProdukHukumController@produkByCategory']);
+    $router->get('produk-hukum/{id}', ['uses' => 'ProdukHukumController@produkById']);
+    $router->get('produk-hukum/menaker/count', ['uses' => 'ProdukHukumController@countPermenaker']);
+    $router->get('produk-hukum/perbp2mi/count', ['uses' => 'ProdukHukumController@countPerBp2mi']);
+    $router->get('produk-hukum/kepka/count', ['uses' => 'ProdukHukumController@countKepka']);
+    $router->get('produk-hukum/se/count', ['uses' => 'ProdukHukumController@countSEKepala']);
+    $router->get('informasi-hukum', ['uses' => 'ProdukHukumController@informasi']);
+    $router->get('informasi-hukum/category', ['uses' => 'ProdukHukumController@produkByCategory']);
+    $router->get('informasi-hukum/{id}', ['uses' => 'ProdukHukumController@produkById']);
+    $router->get('category', ['uses' => 'KategoriController@get']);
+    $router->get('category/produk-hukum', ['uses' => 'KategoriController@getProdukHukum']);
+    $router->get('category/informasi-hukum', ['uses' => 'KategoriController@getInformasiHukum']);
+    $router->get('category/{id}', ['uses' => 'KategoriController@getById']);
+    $router->get('faq', ['uses' => 'FaqController@get']);
+    $router->post('konsultasi', ['uses' => 'KonsultasiController@create']);
 });
 
