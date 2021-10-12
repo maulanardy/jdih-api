@@ -1,12 +1,15 @@
 <?php
 namespace App\Http\Controllers;
+use Illuminate\Http\Request;
 
 use App\Models\News;
 
 class NewsController extends Controller
 {
-    public function get(){
-        return News::where('BERITA_STATUS', 1)->with('image')->orderBy('BERITA_TIMESTAMP', 'DESC')->paginate(5);
+    public function get(Request $request){
+        $sort = $request->has('sort') ? $request->sort : 'DESC';
+
+        return News::where('BERITA_STATUS', 1)->with('image')->orderBy('BERITA_TIMESTAMP', $sort)->paginate(5);
     }
 
     public function detail($id){

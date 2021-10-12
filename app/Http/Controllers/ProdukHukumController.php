@@ -9,26 +9,73 @@ class ProdukHukumController extends Controller
 {
     public function produk(Request $request){
         $limit = $request->has('limit') ? $request->limit : 10;
+        $sort = $request->has('sort') ? $request->sort : 'DESC';
+
         $kategoriIds = Kategori::where('KATEGORI_TYPE', 'Produk Hukum')->where('KATEGORI_ISAKTIF', 1)->pluck("KATEGORI_ID");
 
-        $produk = ProdukHukum::whereIn('PRODUK_KATEGORI_ID', $kategoriIds)->where('PRODUK_STATUS', '!=', 99)->where('PRODUK_STATUS_ACTIVE', 1)->with('file')->orderBy('PRODUK_TAHUN', 'DESC')->orderBy('PRODUK_TIMESTAMP', 'DESC');
+        $produk = ProdukHukum::whereIn('PRODUK_KATEGORI_ID', $kategoriIds)->where('PRODUK_STATUS', '!=', 99)->where('PRODUK_STATUS_ACTIVE', 1)->with('file')->orderBy('PRODUK_TAHUN', $sort)->orderBy('PRODUK_TIMESTAMP', $sort);
         
         return $produk->paginate($limit);
     }
 
+    public function produkSearch(Request $request){
+        $limit = $request->has('limit') ? $request->limit : 10;
+        $sort = $request->has('sort') ? $request->sort : 'DESC';
+
+        $kategoriIds = Kategori::where('KATEGORI_TYPE', 'Produk Hukum')->where('KATEGORI_ISAKTIF', 1)->pluck("KATEGORI_ID");
+
+        $produk = ProdukHukum::whereIn('PRODUK_KATEGORI_ID', $kategoriIds)->where('PRODUK_STATUS', '!=', 99)->where('PRODUK_STATUS_ACTIVE', 1)->with('file')->orderBy('PRODUK_TAHUN', $sort)->orderBy('PRODUK_TIMESTAMP', $sort);
+        
+        if($request->has('keyword')){
+            $produk = $produk->where(function ($query) use ($request) {
+                $query->where('PRODUK_JUDUL', 'LIKE', '%'.$request->keyword.'%')
+                        ->orWhere('PRODUK_JUDULJDIHN', 'LIKE', '%'.$request->keyword.'%')
+                        ->orWhere('PRODUK_DESC', 'LIKE', '%'.$request->keyword.'%');
+            });
+        }
+
+        $paginated = $produk->paginate($limit);
+        
+        return $paginated->appends($request->input());
+    }
+
     public function informasi(Request $request){
         $limit = $request->has('limit') ? $request->limit : 5;
+        $sort = $request->has('sort') ? $request->sort : 'DESC';
+
         $kategoriIds = Kategori::where('KATEGORI_TYPE', 'Informasi Hukum')->where('KATEGORI_ISAKTIF', 1)->pluck("KATEGORI_ID");
 
-        return ProdukHukum::whereIn('PRODUK_KATEGORI_ID', $kategoriIds)->where('PRODUK_STATUS', '!=', 99)->where('PRODUK_STATUS_ACTIVE', 1)->with('file')->orderBy('PRODUK_TAHUN', 'DESC')->orderBy('PRODUK_TIMESTAMP', 'DESC')->paginate($limit);
+        return ProdukHukum::whereIn('PRODUK_KATEGORI_ID', $kategoriIds)->where('PRODUK_STATUS', '!=', 99)->where('PRODUK_STATUS_ACTIVE', 1)->with('file')->orderBy('PRODUK_TAHUN', $sort)->orderBy('PRODUK_TIMESTAMP', $sort)->paginate($limit);
+    }
+
+    public function informasiSearch(Request $request){
+        $limit = $request->has('limit') ? $request->limit : 10;
+        $sort = $request->has('sort') ? $request->sort : 'DESC';
+
+        $kategoriIds = Kategori::where('KATEGORI_TYPE', 'Informasi Hukum')->where('KATEGORI_ISAKTIF', 1)->pluck("KATEGORI_ID");
+
+        $produk = ProdukHukum::whereIn('PRODUK_KATEGORI_ID', $kategoriIds)->where('PRODUK_STATUS', '!=', 99)->where('PRODUK_STATUS_ACTIVE', 1)->with('file')->orderBy('PRODUK_TAHUN', $sort)->orderBy('PRODUK_TIMESTAMP', $sort);
+        
+        if($request->has('keyword')){
+            $produk = $produk->where(function ($query) use ($request) {
+                $query->where('PRODUK_JUDUL', 'LIKE', '%'.$request->keyword.'%')
+                        ->orWhere('PRODUK_JUDULJDIHN', 'LIKE', '%'.$request->keyword.'%')
+                        ->orWhere('PRODUK_DESC', 'LIKE', '%'.$request->keyword.'%');
+            });
+        }
+
+        $paginated = $produk->paginate($limit);
+        
+        return $paginated->appends($request->input());
     }
 
     public function produkByCategory(Request $request){
         if($request->has('categories')){
             $limit = $request->has('limit') ? $request->limit : 10;
+            $sort = $request->has('sort') ? $request->sort : 'DESC';
             $kategoriIds = explode(",", $request->categories);
 
-            $produk = ProdukHukum::whereIn('PRODUK_KATEGORI_ID', $kategoriIds)->where('PRODUK_STATUS', '!=', 99)->where('PRODUK_STATUS_ACTIVE', 1)->with('file')->orderBy('PRODUK_TAHUN', 'DESC')->orderBy('PRODUK_TIMESTAMP', 'DESC');
+            $produk = ProdukHukum::whereIn('PRODUK_KATEGORI_ID', $kategoriIds)->where('PRODUK_STATUS', '!=', 99)->where('PRODUK_STATUS_ACTIVE', 1)->with('file')->orderBy('PRODUK_TAHUN', $sort)->orderBy('PRODUK_TIMESTAMP', $sort);
             
             if($request->has('judul_not')){
                 $produk = $produk->where('PRODUK_JUDUL', 'NOT LIKE', '%'.$request->judul_not.'%');
@@ -40,6 +87,42 @@ class ProdukHukumController extends Controller
 
             if($request->has('bahasa')){
                 $produk = $produk->where('PRODUK_BAHASA', $request->bahasa);
+            }
+
+            $paginated = $produk->paginate($limit);
+            
+            return $paginated->appends($request->input());
+        } else {
+            return response()->json(['message' => 'categories required'], 400);
+        }
+    }
+
+    public function produkSearchByCategory(Request $request){
+        if($request->has('categories')){
+            $limit = $request->has('limit') ? $request->limit : 10;
+            $sort = $request->has('sort') ? $request->sort : 'DESC';
+            $kategoriIds = explode(",", $request->categories);
+
+            $produk = ProdukHukum::whereIn('PRODUK_KATEGORI_ID', $kategoriIds)->where('PRODUK_STATUS', '!=', 99)->where('PRODUK_STATUS_ACTIVE', 1)->with('file')->orderBy('PRODUK_TAHUN', $sort)->orderBy('PRODUK_TIMESTAMP', $sort);
+            
+            if($request->has('judul_not')){
+                $produk = $produk->where('PRODUK_JUDUL', 'NOT LIKE', '%'.$request->judul_not.'%');
+            }
+
+            if($request->has('judul')){
+                $produk = $produk->where('PRODUK_JUDUL', 'LIKE', '%'.$request->judul.'%');
+            }
+
+            if($request->has('bahasa')){
+                $produk = $produk->where('PRODUK_BAHASA', $request->bahasa);
+            }
+
+            if($request->has('keyword')){
+                $produk = $produk->where(function ($query) use ($request) {
+                    $query->where('PRODUK_JUDUL', 'LIKE', '%'.$request->keyword.'%')
+                          ->orWhere('PRODUK_JUDULJDIHN', 'LIKE', '%'.$request->keyword.'%')
+                          ->orWhere('PRODUK_DESC', 'LIKE', '%'.$request->keyword.'%');
+                });
             }
 
             $paginated = $produk->paginate($limit);
