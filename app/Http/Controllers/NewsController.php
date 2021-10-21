@@ -9,7 +9,7 @@ class NewsController extends Controller
     public function get(Request $request){
         $sort = $request->has('sort') ? $request->sort : 'DESC';
 
-        return News::where('BERITA_STATUS', 1)->with('image')->orderBy('BERITA_TIMESTAMP', $sort)->paginate(5);
+        return News::where('BERITA_STATUS', 1)->with('image')->orderBy('BERITA_ID', $sort)->paginate(5);
     }
 
     public function detail($id){

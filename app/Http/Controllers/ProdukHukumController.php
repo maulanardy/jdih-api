@@ -13,7 +13,7 @@ class ProdukHukumController extends Controller
 
         $kategoriIds = Kategori::where('KATEGORI_TYPE', 'Produk Hukum')->where('KATEGORI_ISAKTIF', 1)->pluck("KATEGORI_ID");
 
-        $produk = ProdukHukum::whereIn('PRODUK_KATEGORI_ID', $kategoriIds)->where('PRODUK_STATUS', '!=', 99)->where('PRODUK_STATUS_ACTIVE', 1)->with('file')->orderBy('PRODUK_TAHUN', $sort)->orderBy('PRODUK_TIMESTAMP', $sort);
+        $produk = ProdukHukum::join('TRA_FILEUPLOADS', 'TRA_FILEUPLOADS.F_TABLE_COLVALUE', '=', 'TRA_PRODUK_HUKUM.PRODUK_ID')->where('F_TYPE', 'PRODUK')->where('F_ISACTIVE', '1')->whereIn('PRODUK_KATEGORI_ID', $kategoriIds)->where('PRODUK_STATUS', '!=', 99)->where('PRODUK_STATUS_ACTIVE', 1)->with('file')->orderBy('PRODUK_TAHUN', $sort)->orderBy('PRODUK_TIMESTAMP', $sort);
         
         return $produk->paginate($limit);
     }
@@ -24,7 +24,7 @@ class ProdukHukumController extends Controller
 
         $kategoriIds = Kategori::where('KATEGORI_TYPE', 'Produk Hukum')->where('KATEGORI_ISAKTIF', 1)->pluck("KATEGORI_ID");
 
-        $produk = ProdukHukum::whereIn('PRODUK_KATEGORI_ID', $kategoriIds)->where('PRODUK_STATUS', '!=', 99)->where('PRODUK_STATUS_ACTIVE', 1)->with('file')->orderBy('PRODUK_TAHUN', $sort)->orderBy('PRODUK_TIMESTAMP', $sort);
+        $produk = ProdukHukum::join('TRA_FILEUPLOADS', 'TRA_FILEUPLOADS.F_TABLE_COLVALUE', '=', 'TRA_PRODUK_HUKUM.PRODUK_ID')->where('F_TYPE', 'PRODUK')->where('F_ISACTIVE', '1')->whereIn('PRODUK_KATEGORI_ID', $kategoriIds)->where('PRODUK_STATUS', '!=', 99)->where('PRODUK_STATUS_ACTIVE', 1)->with('file')->orderBy('PRODUK_TAHUN', $sort)->orderBy('PRODUK_TIMESTAMP', $sort);
         
         if($request->has('keyword')){
             $produk = $produk->where(function ($query) use ($request) {
@@ -45,7 +45,7 @@ class ProdukHukumController extends Controller
 
         $kategoriIds = Kategori::where('KATEGORI_TYPE', 'Informasi Hukum')->where('KATEGORI_ISAKTIF', 1)->pluck("KATEGORI_ID");
 
-        return ProdukHukum::whereIn('PRODUK_KATEGORI_ID', $kategoriIds)->where('PRODUK_STATUS', '!=', 99)->where('PRODUK_STATUS_ACTIVE', 1)->with('file')->orderBy('PRODUK_TAHUN', $sort)->orderBy('PRODUK_TIMESTAMP', $sort)->paginate($limit);
+        return ProdukHukum::join('TRA_FILEUPLOADS', 'TRA_FILEUPLOADS.F_TABLE_COLVALUE', '=', 'TRA_PRODUK_HUKUM.PRODUK_ID')->where('F_TYPE', 'PRODUK')->where('F_ISACTIVE', '1')->whereIn('PRODUK_KATEGORI_ID', $kategoriIds)->where('PRODUK_STATUS', '!=', 99)->where('PRODUK_STATUS_ACTIVE', 1)->with('file')->orderBy('PRODUK_TAHUN', $sort)->orderBy('PRODUK_TIMESTAMP', $sort)->paginate($limit);
     }
 
     public function informasiSearch(Request $request){
@@ -54,7 +54,7 @@ class ProdukHukumController extends Controller
 
         $kategoriIds = Kategori::where('KATEGORI_TYPE', 'Informasi Hukum')->where('KATEGORI_ISAKTIF', 1)->pluck("KATEGORI_ID");
 
-        $produk = ProdukHukum::whereIn('PRODUK_KATEGORI_ID', $kategoriIds)->where('PRODUK_STATUS', '!=', 99)->where('PRODUK_STATUS_ACTIVE', 1)->with('file')->orderBy('PRODUK_TAHUN', $sort)->orderBy('PRODUK_TIMESTAMP', $sort);
+        $produk = ProdukHukum::join('TRA_FILEUPLOADS', 'TRA_FILEUPLOADS.F_TABLE_COLVALUE', '=', 'TRA_PRODUK_HUKUM.PRODUK_ID')->where('F_TYPE', 'PRODUK')->where('F_ISACTIVE', '1')->whereIn('PRODUK_KATEGORI_ID', $kategoriIds)->where('PRODUK_STATUS', '!=', 99)->where('PRODUK_STATUS_ACTIVE', 1)->with('file')->orderBy('PRODUK_TAHUN', $sort)->orderBy('PRODUK_TIMESTAMP', $sort);
         
         if($request->has('keyword')){
             $produk = $produk->where(function ($query) use ($request) {
@@ -75,7 +75,7 @@ class ProdukHukumController extends Controller
             $sort = $request->has('sort') ? $request->sort : 'DESC';
             $kategoriIds = explode(",", $request->categories);
 
-            $produk = ProdukHukum::whereIn('PRODUK_KATEGORI_ID', $kategoriIds)->where('PRODUK_STATUS', '!=', 99)->where('PRODUK_STATUS_ACTIVE', 1)->with('file')->orderBy('PRODUK_TAHUN', $sort)->orderBy('PRODUK_TIMESTAMP', $sort);
+            $produk = ProdukHukum::join('TRA_FILEUPLOADS', 'TRA_FILEUPLOADS.F_TABLE_COLVALUE', '=', 'TRA_PRODUK_HUKUM.PRODUK_ID')->where('F_TYPE', 'PRODUK')->where('F_ISACTIVE', '1')->whereIn('PRODUK_KATEGORI_ID', $kategoriIds)->where('PRODUK_STATUS', '!=', 99)->where('PRODUK_STATUS_ACTIVE', 1)->with('file')->orderBy('PRODUK_TAHUN', $sort)->orderBy('PRODUK_TIMESTAMP', $sort);
             
             if($request->has('judul_not')){
                 $produk = $produk->where('PRODUK_JUDUL', 'NOT LIKE', '%'.$request->judul_not.'%');
@@ -103,7 +103,7 @@ class ProdukHukumController extends Controller
             $sort = $request->has('sort') ? $request->sort : 'DESC';
             $kategoriIds = explode(",", $request->categories);
 
-            $produk = ProdukHukum::whereIn('PRODUK_KATEGORI_ID', $kategoriIds)->where('PRODUK_STATUS', '!=', 99)->where('PRODUK_STATUS_ACTIVE', 1)->with('file')->orderBy('PRODUK_TAHUN', $sort)->orderBy('PRODUK_TIMESTAMP', $sort);
+            $produk = ProdukHukum::join('TRA_FILEUPLOADS', 'TRA_FILEUPLOADS.F_TABLE_COLVALUE', '=', 'TRA_PRODUK_HUKUM.PRODUK_ID')->where('F_TYPE', 'PRODUK')->where('F_ISACTIVE', '1')->whereIn('PRODUK_KATEGORI_ID', $kategoriIds)->where('PRODUK_STATUS', '!=', 99)->where('PRODUK_STATUS_ACTIVE', 1)->with('file')->orderBy('PRODUK_TAHUN', $sort)->orderBy('PRODUK_TIMESTAMP', $sort);
             
             if($request->has('judul_not')){
                 $produk = $produk->where('PRODUK_JUDUL', 'NOT LIKE', '%'.$request->judul_not.'%');

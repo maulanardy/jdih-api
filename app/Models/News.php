@@ -16,6 +16,6 @@ class News extends Model
     }
 
     public function image() {
-        return $this->file_upload()->where('F_TABLE','=', 'TRA_BERITA');
+        return $this->file_upload()->where('F_TABLE','=', 'TRA_BERITA')->where('F_ISACTIVE','=', '1');
     }
 }
