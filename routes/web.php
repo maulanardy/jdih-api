@@ -39,5 +39,8 @@ $router->group(['prefix' => '/api/v1/'], function () use ($router) {
     $router->get('category/{id}', ['uses' => 'KategoriController@getById']);
     $router->get('faq', ['uses' => 'FaqController@get']);
     $router->post('konsultasi', ['uses' => 'KonsultasiController@create']);
+    $router->get('konsultasi/testmail', ['uses' => 'KonsultasiController@test']);
+    $router->get('rating', ['uses' => 'RatingController@find']);
+    $router->post('rating', ['uses' => 'RatingController@create']);
 });
 

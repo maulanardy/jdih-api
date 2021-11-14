@@ -3,8 +3,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use App\Models\Konsultasi;
+use App\Mail\GreetingKonsultasi;
 
 class KonsultasiController extends Controller
 {
@@ -18,9 +20,14 @@ class KonsultasiController extends Controller
         $model->konsul_active_flag = 1;
 
         if($model->save()){
+            Mail::to($request->email)->send(new GreetingKonsultasi($request->nama));
             return new Response("Created", 201);
         } else {
             return new Response("An error occurred", 500);
         }
+    }
+    public function test(Request $request){
+        // Mail::to($request->user())->send(new OrderShipped($order));
+        Mail::to("arbomb.serv@gmail.com")->send(new GreetingKonsultasi("Ardy"));
     }
 }

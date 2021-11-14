@@ -75,7 +75,7 @@ class ProdukHukumController extends Controller
             $sort = $request->has('sort') ? $request->sort : 'DESC';
             $kategoriIds = explode(",", $request->categories);
 
-            $produk = ProdukHukum::join('TRA_FILEUPLOADS', 'TRA_FILEUPLOADS.F_TABLE_COLVALUE', '=', 'TRA_PRODUK_HUKUM.PRODUK_ID')->where('F_TYPE', 'PRODUK')->where('F_ISACTIVE', '1')->whereIn('PRODUK_KATEGORI_ID', $kategoriIds)->where('PRODUK_STATUS', '!=', 99)->where('PRODUK_STATUS_ACTIVE', 1)->with('file')->orderBy('PRODUK_TAHUN', $sort)->orderBy('PRODUK_TIMESTAMP', $sort);
+            $produk = ProdukHukum::distinct('PRODUK_NOMOR_PERATURAN')->join('TRA_FILEUPLOADS', 'TRA_FILEUPLOADS.F_TABLE_COLVALUE', '=', 'TRA_PRODUK_HUKUM.PRODUK_ID')->where('F_TYPE', 'PRODUK')->where('F_ISACTIVE', '1')->whereIn('PRODUK_KATEGORI_ID', $kategoriIds)->where('PRODUK_STATUS', '!=', 99)->where('PRODUK_STATUS_ACTIVE', 1)->with('file')->orderBy('PRODUK_TAHUN', $sort)->orderBy('PRODUK_TIMESTAMP', $sort);
             
             if($request->has('judul_not')){
                 $produk = $produk->where('PRODUK_JUDUL', 'NOT LIKE', '%'.$request->judul_not.'%');
