@@ -18,4 +18,9 @@ class ProdukHukum extends Model
     public function file() {
         return $this->file_upload()->where('F_TABLE','=', 'TRA_PRODUK_HUKUM');
     }
+
+    public function log()
+    {
+        return $this->hasMany(ProdukLog::class, 'LOG_PRODUK_ID');
+    }
 }
