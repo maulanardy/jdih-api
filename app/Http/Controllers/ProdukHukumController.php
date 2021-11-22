@@ -22,7 +22,9 @@ class ProdukHukumController extends Controller
         $limit = $request->has('limit') ? $request->limit : 10;
         $sort = $request->has('sort') ? $request->sort : 'DESC';
 
-        $kategoriIds = Kategori::where('KATEGORI_TYPE', 'Produk Hukum')->where('KATEGORI_ISAKTIF', 1)->pluck("KATEGORI_ID");
+        $kategoriIds = Kategori::where(function ($query) use ($request) {
+            $query->where('KATEGORI_TYPE', 'Produk Hukum')->orWhere('KATEGORI_TYPE', 'Informasi Hukum');
+        })->where('KATEGORI_ISAKTIF', 1)->pluck("KATEGORI_ID");
 
         $produk = ProdukHukum::join('TRA_FILEUPLOADS', 'TRA_FILEUPLOADS.F_TABLE_COLVALUE', '=', 'TRA_PRODUK_HUKUM.PRODUK_ID')->where('F_TYPE', 'PRODUK')->where('F_ISACTIVE', '1')->whereIn('PRODUK_KATEGORI_ID', $kategoriIds)->where('PRODUK_STATUS', '!=', 99)->where('PRODUK_STATUS_ACTIVE', 1)->with('file')->with('log')->orderBy('PRODUK_TAHUN', $sort)->orderBy('PRODUK_TIMESTAMP', $sort);
         
