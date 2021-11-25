@@ -87,6 +87,10 @@ class ProdukHukumController extends Controller
                 $produk = $produk->where('PRODUK_JUDUL', 'LIKE', '%'.$request->judul.'%');
             }
 
+            if($request->has('upt')){
+                $produk = $produk->where('PRODUK_USER_NAMA', $request->upt);
+            }
+
             if($request->has('bahasa')){
                 $produk = $produk->where('PRODUK_BAHASA', $request->bahasa);
             }
@@ -113,6 +117,10 @@ class ProdukHukumController extends Controller
 
             if($request->has('judul')){
                 $produk = $produk->where('PRODUK_JUDUL', 'LIKE', '%'.$request->judul.'%');
+            }
+
+            if($request->has('upt')){
+                $produk = $produk->where('PRODUK_USER_NAMA', $request->upt);
             }
 
             if($request->has('bahasa')){

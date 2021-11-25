@@ -42,5 +42,6 @@ $router->group(['prefix' => '/api/v1/'], function () use ($router) {
     $router->get('konsultasi/testmail', ['uses' => 'KonsultasiController@test']);
     $router->get('rating', ['uses' => 'RatingController@find']);
     $router->post('rating', ['uses' => 'RatingController@create']);
+    $router->get('upt', ['uses' => 'UptController@get']);
 });
 
