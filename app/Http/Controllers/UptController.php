@@ -9,7 +9,7 @@ use App\Models\ProdukHukum;
 class UptController extends Controller
 {
     public function get(Request $request){
-        $adminUpt = UserWeb::distinct('USER_ID')->join('M_UPT', 'A_USERWEB.USER_UNITKERJA', '=', 'M_UPT.UPT_ID')->where('USER_SECTION', 'ADMINUPT')->where('STATUS', 'ENABLE')->get();
+        $adminUpt = UserWeb::distinct('USER_ID')->join('M_UPT', 'A_USERWEB.USER_UNITKERJA', '=', 'M_UPT.UPT_ID')->where('USER_SECTION', 'ADMINUPT')->get();
         $adminUptHasProduk = [];
 
         foreach($adminUpt as $adm){
